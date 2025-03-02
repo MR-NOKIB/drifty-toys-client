@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import logo from "../../../assets/images/logo/drifty-toys-logo-f.webp";
 import { Link } from 'react-router-dom';
 import ActiveLink from '../../../ActiveLink/ActiveLink';
+import { AuthContext } from '../../../Provider/AuthProvider';
 const Navbar = () => {
+    const { user, logOut } = useContext(AuthContext);
     return (
         <div className="navbar bg-base-100 shadow-sm">
             <div className="navbar-start">
@@ -32,9 +34,10 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <Link className='btn' to="/login">Login</Link>
-                <Link className='btn' to="/register">Register</Link>
-                <Link className='btn' to="/logout">Logout</Link>
+                {user ? <button onClick={logOut} className='btn bg-[#DE3F75] hover:bg-[#de3f74cb] text-white'>Logout</button> :
+                    <>
+                        <Link className='btn bg-[#DE3F75] hover:bg-[#de3f74cb] text-white' to="/login">Login</Link>
+                    </>}
             </div>
         </div>
     );
