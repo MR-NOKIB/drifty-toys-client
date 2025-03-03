@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
 import ToyCard from '../ToyCard/ToyCard';
+
 const AllToys = () => {
     const toys = useLoaderData();
     return (

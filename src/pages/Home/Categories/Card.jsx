@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../../Provider/AuthProvider';
+import { useContext } from 'react';
 
-const Card = ({ toy, user }) => {
-    const { _id, img,name, price, ratings } = toy;
+const Card = ({ toy }) => {
+    const { user } = useContext(AuthContext);
+    const { _id, img, name, price, ratings } = toy;
     const handleButton = () => {
         if (!user) {
             Swal.fire(

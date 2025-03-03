@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { AuthContext } from '../../Provider/AuthProvider';
+import Swal from 'sweetalert2';
 
 const ToyDetails = () => {
+    const { user } = useContext(AuthContext);
     const { id } = useParams();
     const [toy, setToy] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -18,9 +21,39 @@ const ToyDetails = () => {
                 setLoading(false);
             }
         };
-
         fetchToyDetails();
     }, [id]);
+
+
+
+    const handleAddToCart = id => {
+        const myToy = {
+            email: user.email,
+            price: toy.price,
+            name: toy.name,
+            img: toy.img,
+            ratings: toy.ratings,
+            category: toy.category,
+            seller_info: toy.seller_info
+        }
+        fetch(`http://localhost:5000/toys/${id}`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(myToy)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.insertedId) {
+                Swal.fire({
+                    title: "Successfully added",
+                    icon: "success",
+                    draggable: true
+                  });
+            }
+        })
+    }
 
     if (loading) {
         return (
@@ -45,9 +78,9 @@ const ToyDetails = () => {
                     <div className="flex flex-col lg:flex-row">
                         <div className="lg:w-1/2 p-4 lg:p-8 flex items-center justify-center">
                             <div className="w-full h-full flex items-center justify-center">
-                                <img 
-                                    className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-contain rounded-lg" 
-                                    src={toy.img} 
+                                <img
+                                    className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-contain rounded-lg"
+                                    src={toy.img}
                                     alt={toy.name}
                                 />
                             </div>
@@ -77,8 +110,8 @@ const ToyDetails = () => {
                                 </div>
                             </div>
                             <div className="mt-10">
-                                <button className="btn w-full bg-[#DE3F75] hover:bg-[#de3f74cb] text-white text-xl font-semibold px-4 py-2 rounded-md">
-                                    Add to Cart
+                                <button onClick={() => handleAddToCart(toy._id)} className="btn w-full bg-[#DE3F75] hover:bg-[#de3f74cb] text-white text-xl font-semibold px-4 py-2 rounded-md">
+                                    Add to My Toys
                                 </button>
                             </div>
                         </div>
